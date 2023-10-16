@@ -45,7 +45,6 @@ async function start_reqs() {
             continue;
         }
 
-        let seenPeopleNames = new Set();
         if (seenPeopleNames.has(fullName)) {
             // Skip this user, it's a duplicate 
             display_alert(`Duplicate user provided in the CSV - Skipping ${fullName} - ${email}`, "bad")
@@ -73,8 +72,10 @@ async function start_reqs() {
                 else {
                     document.getElementById("player-details").value += `\n${email},${PLAYER_PASSWORD}`;
                 }
+                document.getElementById("download-btn").disabled = (document.getElementById("player-details").value == "");
             } else {
-                display_alert(`User Already Exists - ${email}`, "loading");
+                display_alert(`Failed to create client user or other error - ${email} - Skipping this account!`, "bad");
+                continue; // Stop this further
             }
         }
 
@@ -129,7 +130,6 @@ async function start_reqs() {
 
     let done_alert = newAlertBox("TASK FINISHED-TASK FINISHED");
     done_alert(`All ${parsed_data_arr.length} Users Complete!`);
-    document.getElementById("download-btn").disabled = (document.getElementById("player-details").value == "");
     if (document.getElementById("player-details").value == "") {
         document.getElementById("player-details").value = "No new user accounts created."
     }
