@@ -12,7 +12,7 @@ async function start_reqs() {
     auth_token = xAuthToken
     console.log(xAuthToken)
     if (!xAuthToken || xAuthToken == "" || xAuthToken == null) {
-        return alert("Invalid Token! Please check to ensure it is a valid token!");
+        return alert("Invalid Token! Please check to ensure you entered a valid token!");
     } 
 
     // Validate the auth token -- ensure it works
@@ -20,10 +20,12 @@ async function start_reqs() {
         return alert("Invalid Token! Please check to ensure it is a valid token!");
     
     }
-    setCookie("auth-token", xAuthToken, 100);
+    setCookie("auth-token", xAuthToken, 100); // Save the auth token into the cookies 
 
     document.getElementById("player-details").value = ""
     let seenPeopleNames = new Set();
+
+    // Go through all the given users and make the requests
     for (let i = 0; i < parsed_data_arr.length; i++) {
         let playerDataMap = parsed_data_arr[i];
         let firstName = format_entry(playerDataMap["firstName"]);
@@ -33,6 +35,8 @@ async function start_reqs() {
         let teamID = format_entry(playerDataMap["teamID"]);
         let displayAlertIdentifier = `${firstName}-${i + 1}`;
         let display_alert = newAlertBox(displayAlertIdentifier);
+
+        let gotPiped = false;
 
         if(email == undefined || email == "undefined" || fullName == undefined || fullName == " ") {
             // Important info not given
@@ -67,9 +71,11 @@ async function start_reqs() {
             if(ID_OF_PLAYER_ACC !== "FAIL") {
                 display_alert(`Piping User ${email}'s password to Textbox Above`, "good");
                 if (document.getElementById("player-details").value == "") {
+                    gotPiped = true;
                     document.getElementById("player-details").value = `${email},${PLAYER_PASSWORD}`;
                 }
                 else {
+                    gotPiped = true;
                     document.getElementById("player-details").value += `\n${email},${PLAYER_PASSWORD}`;
                 }
                 document.getElementById("download-btn").disabled = (document.getElementById("player-details").value == "");
@@ -111,6 +117,7 @@ async function start_reqs() {
         
         if(!ourUserObj) {
             display_alert(`Skipping User: ${email} - PLAYER TEAM NOT FOUND`, `bad`);
+            if (gotPiped) document.getElementById("player-details").value += `,[FAIL]` // Pipe the playerID as well into the CSV log
             continue;
         }        
         PLAYER_TEAM_ASSOCIATION_ID = ourUserObj.id;
@@ -122,11 +129,13 @@ async function start_reqs() {
             display_alert(`Error on building account user for ${email}`, "bad");
             continue;
         }
+        if(gotPiped) document.getElementById("player-details").value += `,${PLAYER_TEAM_ASSOCIATION_ID}` // Pipe the playerID as well into the CSV log
         TO_USE_RESP.favoritePlayerIds.push(PLAYER_TEAM_ASSOCIATION_ID);
         TO_USE_RESP.favoriteTeamIds.push(teamID);
         await link_favorite_data(ID_OF_PLAYER_ACC, TO_USE_RESP);
+
         display_alert(`Completed entire process for ${email}`, "good");
-    }
+    } // End of the loop
 
     let done_alert = newAlertBox("TASK FINISHED-TASK FINISHED");
     done_alert(`All ${parsed_data_arr.length} Users Complete!`);

@@ -23,33 +23,24 @@ async function make_web_request(type, url, contentType=null, body=null) {
     }));
 }
 
-function generateRandomString(length) {
+function generateRandomFrom(length, str) {
     let pass = '';
-    let str ='abcdefghijklmnopqrstuvwxyz';
  
-    for (let i = 1; i <= length; i++) {
-        let char = Math.floor(Math.random()
-            * str.length + 1);
- 
+    for (let i = 0; i < length; i++) {
+        let char = Math.floor(Math.random() * str.length + 1);
         pass += str.charAt(char)
     }
  
     return pass;
 }
 
+function generateRandomString(length) {
+    return generateRandomFrom(length, 'abcdefghijklmnopqrstuvwxyz')
+}
+
 
 function generateRandomNumber(length) {
-    let pass = '';
-    let str = '123456789';
- 
-    for (let i = 1; i <= length; i++) {
-        let char = Math.floor(Math.random()
-            * str.length + 1);
- 
-        pass += str.charAt(char)
-    }
- 
-    return pass;
+    return generateRandomFrom(length, '123456789');
 }
 
 function get_auth_token() {
