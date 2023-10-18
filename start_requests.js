@@ -87,12 +87,12 @@ async function start_reqs() {
                     gotPiped = true;
                     document.getElementById("player-details").value += `\n${email},${PLAYER_PASSWORD}`;
                 }
-                document.getElementById("download-btn").disabled = (document.getElementById("player-details").value == "");
             } else {
                 display_alert(`Failed to create client user or other error - ${email} - Skipping this account!`, "bad");
                 continue; // Stop this further
             }
         }
+        document.getElementById("download-btn").disabled = (document.getElementById("player-details").value == "");
 
         // Now we have ID_of_PLAYER_ACC. We can move on to finding which account to use
         let possibleUsers = (await get_user_array(firstName, lastName));
