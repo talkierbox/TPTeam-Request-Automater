@@ -64,6 +64,15 @@ async function start_reqs() {
         console.log(ID_OF_PLAYER_ACC)
         if (ID_OF_PLAYER_ACC) {
             display_alert(`Skipping creation of account for - ${email} - Continuing to next step`, `bad`);
+            // Pipe these details
+            if (document.getElementById("player-details").value == "") {
+                gotPiped = true;
+                document.getElementById("player-details").value = `${email},`;
+            }
+            else {
+                gotPiped = true;
+                document.getElementById("player-details").value += `\n${email},`;
+            }
         } else {
             // Run the function and get a ID_OF_PLAYER_ACC
             let PLAYER_PASSWORD = get_password();
@@ -117,7 +126,7 @@ async function start_reqs() {
         
         if(!ourUserObj) {
             display_alert(`Skipping User: ${email} - PLAYER TEAM NOT FOUND`, `bad`);
-            if (gotPiped) document.getElementById("player-details").value += `,[FAIL]` // Pipe the playerID as well into the CSV log
+            if (gotPiped) document.getElementById("player-details").value += `,[FAILED TO LINK]` // Pipe the playerID as well into the CSV log
             continue;
         }        
         PLAYER_TEAM_ASSOCIATION_ID = ourUserObj.id;
