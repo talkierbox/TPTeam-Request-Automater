@@ -10,7 +10,7 @@ async function start_reqs() {
 
     let xAuthToken = format_entry(get_auth_token())
     auth_token = xAuthToken
-    console.log(xAuthToken)
+    // console.log(xAuthToken)
     if (!xAuthToken || xAuthToken == "" || xAuthToken == null) {
         return alert("Invalid Token! Please check to ensure you entered a valid token!");
     } 
@@ -63,7 +63,7 @@ async function start_reqs() {
 
         // Check if the user already exists, prompt if the user does exist already
         let ID_OF_PLAYER_ACC = await does_user_email_exist(email);
-        console.log(ID_OF_PLAYER_ACC)
+        // console.log(ID_OF_PLAYER_ACC)
         if (ID_OF_PLAYER_ACC) {
             display_alert(`Skipping creation of account for - ${email} - Continuing to next step`, `bad`);
             // Pipe these details
@@ -138,8 +138,8 @@ async function start_reqs() {
         
         let possibleUsrData = await get_user_data_if_exists(email);
         // Use this feature mask
-        console.log("Possible Usr Data: ")
-        console.dir(possibleUsrData)
+        // console.log("Possible Usr Data: ")
+        // console.dir(possibleUsrData)
         if (possibleUsrData && possibleUsrData.content.length == 1) {
             console.log("FEATURE MASK ALREADY EXISTS, USING ", possibleUsrData.content[0].featuresMask)
             featureMask = possibleUsrData.content[0].featuresMask
