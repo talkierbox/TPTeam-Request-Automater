@@ -10,7 +10,7 @@ function parse_csv_data(raw_csv_data) {
     }
 
     let returnArr = []
-    let correlationArr = ["firstName", "lastName", "email", "teamID"];
+    let correlationArr = ["firstName", "lastName", "email", "teamID", "featureMask"];
 
     let entrySplits = raw_csv_data.split("\r\n")
 
@@ -58,7 +58,7 @@ function parse_csv_data(raw_csv_data) {
         if (split == [] || split.length < 1) continue;
         if (split[0] == "") continue;
         if (split.length !== correlationArr.length) {
-            alert("ERROR: Badly formatted CSV! There should be 4 columns and data entries for each row!");
+            alert(`ERROR: Badly formatted CSV! There should be ${correlationArr.length} columns and data entries for each row!`);
             return;
         }
         let tempObj = {}

@@ -98,6 +98,11 @@ async function does_user_email_exist(email) {
     return (resp.content.length > 0 ? resp.content[0].id : false); 
 }
 
+async function get_user_data_if_exists(email) {
+    let resp = (await make_web_request("POST", "https://portal.tpeteam.com/api/clients/users/search", "application/json" , {"page":0,"size":20,"expression":{"type":"function","function":"like","children":[{"type":"field","field":"email"},{"type":"string","value":email}]}}));
+    return await resp.json()
+}
+
 // Returns the new client 
 async function create_user_client_admin_acc(email, password) {
     let resp = await make_web_request("POST", "https://portal.tpeteam.com/api/users", "application/json", {"username": email,"password": password,"authorities":["CLIENT"]});
@@ -122,9 +127,9 @@ async function lookup_team_for_userID(id) {
     return await JSON.parse(respText)
 }
 
-async function build_account_user(ID_OF_PLAYER_ACC, TEAM_ID, PLAYER_TEAM_ASSOCIATION_ID, email) {
+async function build_account_user(ID_OF_PLAYER_ACC, TEAM_ID, PLAYER_TEAM_ASSOCIATION_ID, email, featureMask=0) {
     let resp = await make_web_request("POST", `https://portal.tpeteam.com/api/clients/users`, `application/json`, {
-        "clientId":2473,"userAccountId":ID_OF_PLAYER_ACC,"teamId":TEAM_ID,"playerId":PLAYER_TEAM_ASSOCIATION_ID,"sendPlaylists":true,"playlistsMask":"1","featuresMask":0,"emails":[`${email}`],"locales":["EN"],"analyticUserId":466,"pictureHref":null
+        "clientId":2473,"userAccountId":ID_OF_PLAYER_ACC,"teamId":TEAM_ID,"playerId":PLAYER_TEAM_ASSOCIATION_ID,"sendPlaylists":true,"playlistsMask":"1","featuresMask": parseInt(featureMask),"emails":[`${email}`],"locales":["EN"],"analyticUserId":466,"pictureHref":null
     }); // Use the magic 2473 Number!
     let respText = await resp.text();
     // console.log(respText);
