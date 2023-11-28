@@ -144,13 +144,16 @@ async function start_reqs() {
             console.log("FEATURE MASK ALREADY EXISTS, USING ", possibleUsrData.content[0].featuresMask)
             featureMask = possibleUsrData.content[0].featuresMask
         }
-        let TO_USE_RESP = await build_account_user(ID_OF_PLAYER_ACC, teamID, PLAYER_TEAM_ASSOCIATION_ID, email, featureMask);
-        console.log(TO_USE_RESP);
-
+        let TO_USE_RESP = await build_account_user(ID_OF_PLAYER_ACC, teamID, PLAYER_TEAM_ASSOCIATION_ID, email, featureMask)
         if(!TO_USE_RESP) {
             display_alert(`Error on building account user for ${email}`, "bad");
             continue;
+        } else if (TO_USE_RESP?.status == 500) {
+            console.log(TO_USE_RESP)
+            display_alert(`Internal TPTeam Error Occured on ${email}`, "bad");
+            continue;
         }
+        console.log(TO_USE_RESP);
         if(gotPiped) document.getElementById("player-details").value += `,${PLAYER_TEAM_ASSOCIATION_ID}` // Pipe the playerID as well into the CSV log
         TO_USE_RESP.favoritePlayerIds.push(PLAYER_TEAM_ASSOCIATION_ID);
         TO_USE_RESP.favoriteTeamIds.push(teamID);
