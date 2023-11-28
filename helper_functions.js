@@ -128,12 +128,11 @@ async function lookup_team_for_userID(id) {
 }
 
 async function build_account_user(ID_OF_PLAYER_ACC, TEAM_ID, PLAYER_TEAM_ASSOCIATION_ID, email, featureMask=0) {
-    let resp = await make_web_request("POST", `https://portal.tpeteam.com/api/clients/users`, `application/json`, {
-        "clientId":2473,"userAccountId":ID_OF_PLAYER_ACC,"teamId":TEAM_ID,"playerId":PLAYER_TEAM_ASSOCIATION_ID,"sendPlaylists":true,"playlistsMask":"1","featuresMask": parseInt(featureMask),"emails":[`${email}`],"locales":["EN"],"analyticUserId":466,"pictureHref":null
-    }); // Use the magic 2473 Number!
-    // console.dir({
-       // "clientId":2473,"userAccountId":ID_OF_PLAYER_ACC,"teamId":TEAM_ID,"playerId":PLAYER_TEAM_ASSOCIATION_ID,"sendPlaylists":true,"playlistsMask":"1","featuresMask": parseInt(featureMask),"emails":[`${email}`],"locales":["EN"],"analyticUserId":466,"pictureHref":null
-    // })
+    let toSendObject = {
+        "clientId":2473,"userAccountId":ID_OF_PLAYER_ACC,"teamId": parseInt(TEAM_ID),"playerId":PLAYER_TEAM_ASSOCIATION_ID,"sendPlaylists":true,"playlistsMask": parseInt("1"),"featuresMask": parseInt(featureMask),"emails":[`${email}`],"locales":["EN"],"analyticUserId":466,"pictureHref":null
+    }
+    let resp = await make_web_request("POST", `https://portal.tpeteam.com/api/clients/users`, `application/json`, toSendObject); // Use the magic 2473 Number!
+    // console.dir(toSendObject)
     let respText = await resp.text();
     // console.log(respText);
     return await JSON.parse(respText);
